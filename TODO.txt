@@ -1,0 +1,12 @@
+Clase 1:
+- Usar excepciones en lugar de "return null", etc.
+    - Package "excepciones", clases que hereden de Exception.
+    - Manejar excepciones cuando corresponda, mostrando errores en GUI.
+- Mejorar GUI
+    - GUI para todos los métodos.
+    - Implementar nuevas pantallas, de ser necesario.
+- Usar patrones de diseño.
+- Meter en un repositorio Git.
+
+Clase 2:
+- Implementar RMI
