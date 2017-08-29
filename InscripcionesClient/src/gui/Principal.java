@@ -10,7 +10,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 public class Principal extends JFrame {
-
 	private static final long serialVersionUID = -7189647070719732198L;
 	private JMenuBar barraMenu;
 	private JMenu mnAlta, mnAcciones, mnSalir;
@@ -33,28 +32,23 @@ public class Principal extends JFrame {
 	}
 
 	private void asignarEventos() {
-
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		mnSalirItem.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});
 		mnAlumno.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				addAlumno = new AltaAlumno("Alta Alumno", false, true, false, true);
 				desktop.add(addAlumno);
-
 			}
 		});
 	}
 
 	private void configurar() {
-
 		this.setTitle("Inscripciones");
 		desktop = new JDesktopPane();
 		this.setContentPane(desktop);
@@ -89,7 +83,5 @@ public class Principal extends JFrame {
 		barraMenu.add(mnSalir);
 
 		this.setJMenuBar(barraMenu);
-
 	}
-
 }

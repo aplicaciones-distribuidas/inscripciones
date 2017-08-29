@@ -10,3 +10,9 @@ Clase 1:
 
 Clase 2:
 - Implementar RMI
+
+Clase 3:
+- Business Delegate Pattern: esconder la complejidad de tratar con un objeto remoto
+    - La clase Business Delegate tiene que estar en el Repositorio para poder ser reutilizada por varios clientes.
+    - Maneja excepciones que NO son del negocio (traduciendo excepciones). Las que son del negocio las deja pasar para que sean manejadas por el cliente.
+    - Si no hay RMI, el patron a utilizar es Facade.

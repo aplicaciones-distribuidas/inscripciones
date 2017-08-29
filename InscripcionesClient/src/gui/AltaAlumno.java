@@ -10,11 +10,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import client.Client;
-import dto.AlumnoView;
+import business_delegate.BusinessDelegate;
+import excepciones.AlumnoYaExisteException;
+import excepciones.ConexionException;
 
 public class AltaAlumno extends JInternalFrame {
-
 	private static final long serialVersionUID = -7885298908000683951L;
 	private JLabel lblNombre;
 	private JTextField txtNombre;
@@ -30,13 +30,11 @@ public class AltaAlumno extends JInternalFrame {
 	}
 
 	private void configurar() {
-
 		this.setLayout(new GridLayout(2, 2));
 		lblNombre = new JLabel(" Nuevo Alumno ");
 		txtNombre = new JTextField();
 		btnAceptar = new JButton("Aceptar");
 		btnAceptar.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (txtNombre.getText() == null || txtNombre.getText().length() == 0) {
@@ -45,11 +43,8 @@ public class AltaAlumno extends JInternalFrame {
 				}
 
 				try {
-					// TODO: move this to a controller
-					// Controlador.getInstancia().agregarAlumno(txtNombre.getText());
-					Client.getInstancia().getAlumnosRemoteObject()
-							.agregarAlumno(new AlumnoView(0, txtNombre.getText()));
-				} catch (Exception ex) {
+					BusinessDelegate.getInstancia().agregarAlumno(txtNombre.getText());
+				} catch (AlumnoYaExisteException | ConexionException ex) {
 					JOptionPane.showMessageDialog(aux, ex.getMessage());
 				}
 			}
@@ -60,6 +55,5 @@ public class AltaAlumno extends JInternalFrame {
 		this.add(txtNombre);
 		this.add(btnAceptar);
 		this.add(btnSalir);
-
 	}
 }

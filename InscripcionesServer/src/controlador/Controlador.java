@@ -10,6 +10,7 @@ import dto.CursoView;
 import dto.MateriaView;
 import dto.ProfesorView;
 import excepciones.AlumnoException;
+import excepciones.AlumnoYaExisteException;
 import excepciones.CursoException;
 import excepciones.MateriaException;
 import excepciones.ProfesorException;
@@ -86,14 +87,14 @@ public class Controlador {
 		return resultado;
 	}
 
-	public void agregarAlumno(String nombre) {
+	public void agregarAlumno(String nombre) throws AlumnoYaExisteException {
 		if (!isAlumnoPorNombre(nombre)) {
 			Alumno a = new Alumno(nombre);
 			alumnos.add(a);
+			return;
 		}
-		// else
-		// JOptionPane.showInternalMessageDialog(null, "El alumno " + nombre + " ya
-		// existe");
+
+		throw new AlumnoYaExisteException(nombre);
 	}
 
 	public List<CursoView> getCursos() {

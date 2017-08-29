@@ -1,7 +1,6 @@
 package excepciones;
 
 public class CursoException extends Exception {
-
 	private static final long serialVersionUID = -5741311071832600989L;
 	private String message;
 
