@@ -3,20 +3,29 @@ package negocio;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.AlumnoDAO;
 import dto.AlumnoView;
 
 public class Alumno {
-
-	private static int numerador;
 	private int legajo;
 	private String nombre;
 	private List<Curso> cursos;
 
 	public Alumno(String nombre) {
-		numerador++;
-		legajo = numerador;
+		this.legajo = 0;
 		this.nombre = nombre;
 		cursos = new ArrayList<Curso>();
+	}
+
+	public Alumno(int legajo, String nombre) {
+		this.legajo = legajo;
+		this.nombre = nombre;
+		cursos = new ArrayList<Curso>();
+	}
+
+	public void save() {
+		// TODO: throw exceptions
+		AlumnoDAO.getInstancia().save(this);
 	}
 
 	public boolean sePuedeInscribir(Materia materia) {

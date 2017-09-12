@@ -31,8 +31,7 @@ public class BusinessDelegate {
 	}
 
 	public void agregarAlumno(String nombre) throws ConexionException, AlumnoYaExisteException {
-		AlumnoView alumno = new AlumnoView();
-		alumno.setNombre(nombre);
+		AlumnoView alumno = new AlumnoView(nombre);
 
 		try {
 			alumnosRemoteObject.agregarAlumno(alumno);

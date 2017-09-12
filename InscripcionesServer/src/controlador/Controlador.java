@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import dao.AlumnoDAO;
 import dto.AlumnoView;
 import dto.CursoView;
 import dto.MateriaView;
@@ -20,7 +21,6 @@ import negocio.Materia;
 import negocio.Profesor;
 
 public class Controlador {
-
 	private static Controlador instancia;
 	private List<Alumno> alumnos;
 	private List<Curso> cursos;
@@ -88,13 +88,9 @@ public class Controlador {
 	}
 
 	public void agregarAlumno(String nombre) throws AlumnoYaExisteException {
-		if (!isAlumnoPorNombre(nombre)) {
-			Alumno a = new Alumno(nombre);
-			alumnos.add(a);
-			return;
-		}
-
-		throw new AlumnoYaExisteException(nombre);
+		// TODO: handle exceptions
+		Alumno alumno = new Alumno(nombre);
+		alumno.save();
 	}
 
 	public List<CursoView> getCursos() {

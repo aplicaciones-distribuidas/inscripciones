@@ -12,6 +12,11 @@ public class AlumnoView implements Serializable {
 		this.nombre = "";
 	}
 
+	public AlumnoView(String nombre) {
+		this.legajo = 0;
+		this.nombre = nombre;
+	}
+
 	public AlumnoView(int legajo, String nombre) {
 		this.legajo = legajo;
 		this.nombre = nombre;
