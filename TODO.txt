@@ -16,3 +16,44 @@ Clase 3:
     - La clase Business Delegate tiene que estar en el Repositorio para poder ser reutilizada por varios clientes.
     - Maneja excepciones que NO son del negocio (traduciendo excepciones). Las que son del negocio las deja pasar para que sean manejadas por el cliente.
     - Si no hay RMI, el patron a utilizar es Facade.
+
+Clase 4: Persistencia
+    - ORM: Object-Relational Mapping
+        - Hibernate
+            - XML por cada clase a persistir (ventaja: desacoplamiento entre las clases de negocio y la persistencia)
+            - Anotaciones (JPA: Java Persistence API) (desventaja: acoplamiento)
+                - Buena práctica: Por cada clase de negocio a persistir, tener una clase sin comportamiento (estado únicamente) con las anotaciones pertinentes llamadas "Entity".
+    - Patrones
+        - DAO: Data Access Object
+            - private toEntity(business)
+            - private toBusiness(entity)
+            - public save(business)
+            - public getOne(id)
+            - public getAll()
+            - ...
+        - Proxy: representante de otro objeto (ve algunos datos del objeto y gestiona los mismos)
+        - Facade: cuando se quiere persistir en distintas bases de datos, como si fueran una sola
+    - Conexiones
+        - Pool de conexiones
+            - Fija
+            - Variable (min y max)
+    - Driver JDBC (Java)
+
+    ClaseDeNegocio <------> ClaseDeNegocioDAO <------> {ClaseDeNegocioEntity} <------> Hibernate
+
+    - El DAO se comunica con Hibernate pasandose Entities.
+
+    - Pasos:
+        1) Evaluar cuáles son las clases persistentes -> Cuáles son las clases asociadas.
+        2) Cuáles son las propiedades a persistir.
+        3) Toda entity tiene una identidad (ID) asociada a alguna PK de la DB.
+        4) Tiene colecciones? De qué tipo? Qué cardinaldad?
+        5) Tiene herencia?
+        6) Determinar en qué tabla se va a persistir. Cuales son los campos de la misma.
+
+Clase 5:
+    - Explicación de anotaciones One-to-One, One-to-Many, Many-to-Many, etc.
+    - Para herencia se puede utilizar alguna de las siguientes estrategias:
+        - SingleTable: una única tabla para todas las clases de la herencia.
+        - TablePerClass: una tabla por cada clase concreta.
+
