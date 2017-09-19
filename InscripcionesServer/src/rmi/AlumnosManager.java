@@ -6,7 +6,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 import controlador.Controlador;
 import dto.AlumnoView;
-import excepciones.AlumnoYaExisteException;
+import excepciones.BaseDeDatosException;
 import interfaces.AlumnosTDA;
 
 public class AlumnosManager extends UnicastRemoteObject implements AlumnosTDA, Serializable {
@@ -16,7 +16,7 @@ public class AlumnosManager extends UnicastRemoteObject implements AlumnosTDA, S
 
 	private static final long serialVersionUID = 3548218673814294625L;
 
-	public void agregarAlumno(AlumnoView alumno) throws AlumnoYaExisteException {
+	public void agregarAlumno(AlumnoView alumno) throws BaseDeDatosException {
 		Controlador.getInstancia().agregarAlumno(alumno.getNombre());
 		System.out.println("Alumno agregado: " + alumno.getNombre()); // TODO: remove
 	}

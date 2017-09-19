@@ -4,8 +4,8 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import dto.AlumnoView;
-import excepciones.AlumnoYaExisteException;
+import excepciones.BaseDeDatosException;
 
 public interface AlumnosTDA extends Remote {
-	public void agregarAlumno(AlumnoView alumno) throws AlumnoYaExisteException, RemoteException;
+	public void agregarAlumno(AlumnoView alumno) throws BaseDeDatosException, RemoteException;
 }

@@ -6,7 +6,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import dto.AlumnoView;
-import excepciones.AlumnoYaExisteException;
+import excepciones.BaseDeDatosException;
 import excepciones.ConexionException;
 import interfaces.AlumnosTDA;
 
@@ -30,7 +30,7 @@ public class BusinessDelegate {
 		return instancia;
 	}
 
-	public void agregarAlumno(String nombre) throws ConexionException, AlumnoYaExisteException {
+	public void agregarAlumno(String nombre) throws BaseDeDatosException, ConexionException {
 		AlumnoView alumno = new AlumnoView(nombre);
 
 		try {

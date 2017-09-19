@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import business_delegate.BusinessDelegate;
-import excepciones.AlumnoYaExisteException;
+import excepciones.BaseDeDatosException;
 import excepciones.ConexionException;
 
 public class AltaAlumno extends JInternalFrame {
@@ -44,7 +44,7 @@ public class AltaAlumno extends JInternalFrame {
 
 				try {
 					BusinessDelegate.getInstancia().agregarAlumno(txtNombre.getText());
-				} catch (AlumnoYaExisteException | ConexionException ex) {
+				} catch (BaseDeDatosException | ConexionException ex) {
 					JOptionPane.showMessageDialog(aux, ex.getMessage());
 				}
 			}

@@ -5,6 +5,7 @@ import java.util.List;
 
 import dao.AlumnoDAO;
 import dto.AlumnoView;
+import excepciones.BaseDeDatosException;
 
 public class Alumno {
 	private int legajo;
@@ -23,8 +24,7 @@ public class Alumno {
 		cursos = new ArrayList<Curso>();
 	}
 
-	public void save() {
-		// TODO: throw exceptions
+	public void save() throws BaseDeDatosException {
 		AlumnoDAO.getInstancia().save(this);
 	}
 

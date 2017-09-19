@@ -10,8 +10,8 @@ import dto.AlumnoView;
 import dto.CursoView;
 import dto.MateriaView;
 import dto.ProfesorView;
-import excepciones.AlumnoException;
-import excepciones.AlumnoYaExisteException;
+import excepciones.AlumnoNoExisteException;
+import excepciones.BaseDeDatosException;
 import excepciones.CursoException;
 import excepciones.MateriaException;
 import excepciones.ProfesorException;
@@ -87,8 +87,7 @@ public class Controlador {
 		return resultado;
 	}
 
-	public void agregarAlumno(String nombre) throws AlumnoYaExisteException {
-		// TODO: handle exceptions
+	public void agregarAlumno(String nombre) throws BaseDeDatosException {
 		Alumno alumno = new Alumno(nombre);
 		alumno.save();
 	}
@@ -115,11 +114,8 @@ public class Controlador {
 		return resultado;
 	}
 
-	private Alumno buscarAlumno(int legajo) throws Exception {
-		for (Alumno a : alumnos)
-			if (a.soyELAlumno(legajo))
-				return a;
-		throw new AlumnoException("El alumno no existe");
+	private Alumno buscarAlumno(int legajo) throws BaseDeDatosException, AlumnoNoExisteException {
+		return AlumnoDAO.getInstancia().getByLegajo(legajo);
 	}
 
 	private boolean isAlumnoPorNombre(String nombre) {
