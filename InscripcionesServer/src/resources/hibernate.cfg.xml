@@ -30,5 +30,8 @@
 		<property name="hbm2ddl.auto">create</property>
 
 		<mapping class="entities.AlumnoEntity" />
+		<mapping class="entities.MateriaEntity" />
+		<mapping class="entities.ProfesorEntity" />
+		<mapping class="entities.CursoEntity" />
 	</session-factory>
 </hibernate-configuration>

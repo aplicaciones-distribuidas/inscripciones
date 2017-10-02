@@ -3,7 +3,9 @@ package negocio;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.ProfesorDAO;
 import dto.ProfesorView;
+import excepciones.BaseDeDatosException;
 
 public class Profesor {
 
@@ -19,6 +21,10 @@ public class Profesor {
 		this.direccion = new Direccion(calle, numero, codigoPostal, localidad);
 		this.materias = new ArrayList<Materia>();
 		this.cursos = new ArrayList<Curso>();
+	}
+
+	public void save() throws BaseDeDatosException {
+		ProfesorDAO.getInstancia().save(this);
 	}
 
 	public void agregarMateria(Materia materia) {

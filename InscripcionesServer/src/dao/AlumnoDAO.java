@@ -1,5 +1,8 @@
 package dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.HibernateException;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
@@ -26,8 +29,29 @@ public class AlumnoDAO {
 		return new Alumno(entity.getLegajo(), entity.getNombre());
 	}
 
+	private List<Alumno> toBusiness(List<AlumnoEntity> entities) {
+		List<Alumno> business = new ArrayList<Alumno>();
+		for (AlumnoEntity entity : entities) {
+			business.add(this.toBusiness(entity));
+		}
+		return business;
+	}
+
 	private AlumnoEntity toEntity(Alumno business) {
 		return new AlumnoEntity(business.getLegajo(), business.getNombre());
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Alumno> getAll() throws BaseDeDatosException {
+		List<AlumnoEntity> all = new ArrayList<AlumnoEntity>();
+		try {
+			Session session = Persistencia.getInstancia().getSession();
+			all = session.createQuery("from AlumnoEntity").list();
+			session.close();
+		} catch (HibernateException e) {
+			throw new BaseDeDatosException(e);
+		}
+		return this.toBusiness(all);
 	}
 
 	public Alumno getByLegajo(int legajo) throws BaseDeDatosException, AlumnoNoExisteException {
@@ -38,6 +62,21 @@ public class AlumnoDAO {
 			session.close();
 		} catch (ObjectNotFoundException e) {
 			throw new AlumnoNoExisteException(legajo);
+		} catch (HibernateException e) {
+			throw new BaseDeDatosException(e);
+		}
+		return this.toBusiness(entity);
+	}
+
+	public Alumno getByNombre(String nombre) throws BaseDeDatosException, AlumnoNoExisteException {
+		AlumnoEntity entity = new AlumnoEntity();
+		try {
+			Session session = Persistencia.getInstancia().getSession();
+			entity = (AlumnoEntity) session.createQuery("from AlumnoEntity a where a.nombre = :nombre")
+					.setParameter("nombre", nombre).uniqueResult();
+			session.close();
+		} catch (ObjectNotFoundException e) {
+			throw new AlumnoNoExisteException(nombre);
 		} catch (HibernateException e) {
 			throw new BaseDeDatosException(e);
 		}

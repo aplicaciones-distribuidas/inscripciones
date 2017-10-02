@@ -6,15 +6,18 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import dao.AlumnoDAO;
+import dao.CursoDAO;
+import dao.MateriaDAO;
+import dao.ProfesorDAO;
 import dto.AlumnoView;
 import dto.CursoView;
 import dto.MateriaView;
 import dto.ProfesorView;
 import excepciones.AlumnoNoExisteException;
 import excepciones.BaseDeDatosException;
-import excepciones.CursoException;
-import excepciones.MateriaException;
-import excepciones.ProfesorException;
+import excepciones.CursoNoExisteException;
+import excepciones.MateriaNoExisteException;
+import excepciones.ProfesorNoExisteException;
 import negocio.Alumno;
 import negocio.Curso;
 import negocio.Materia;
@@ -22,16 +25,8 @@ import negocio.Profesor;
 
 public class Controlador {
 	private static Controlador instancia;
-	private List<Alumno> alumnos;
-	private List<Curso> cursos;
-	private List<Materia> materias;
-	private List<Profesor> profesores;
 
 	private Controlador() {
-		alumnos = new ArrayList<Alumno>();
-		materias = new ArrayList<Materia>();
-		profesores = new ArrayList<Profesor>();
-		cursos = new ArrayList<Curso>();
 	}
 
 	public static Controlador getInstancia() {
@@ -47,16 +42,12 @@ public class Controlador {
 		cargoCursos();
 	}
 
-	public void crearCurso(String codigo, int legajo, String dia, String turno, int maximo) {
-		try {
-			Materia materia = buscarMateria(codigo);
-			Profesor profesor = buscarProfesor(legajo);
-			Curso curso = new Curso(profesor, materia, dia, turno, maximo);
-			profesor.agregarCurso(curso);
-			cursos.add(curso);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-		}
+	public void crearCurso(String codigo, int legajo, String dia, String turno, int maximo)
+			throws BaseDeDatosException, MateriaNoExisteException, ProfesorNoExisteException {
+		Materia materia = buscarMateria(codigo);
+		Profesor profesor = buscarProfesor(legajo);
+		Curso curso = new Curso(profesor, materia, dia, turno, maximo);
+		curso.save();
 	}
 
 	public void inscribirAlumno(int legajo, int numero) {
@@ -80,10 +71,11 @@ public class Controlador {
 		}
 	}
 
-	public List<AlumnoView> getAlumnos() {
+	public List<AlumnoView> getAlumnos() throws BaseDeDatosException {
+		List<Alumno> alumnos = AlumnoDAO.getInstancia().getAll();
 		List<AlumnoView> resultado = new ArrayList<AlumnoView>();
-		for (Alumno a : alumnos)
-			resultado.add(a.toView());
+		for (Alumno alumno : alumnos)
+			resultado.add(alumno.toView());
 		return resultado;
 	}
 
@@ -92,21 +84,24 @@ public class Controlador {
 		alumno.save();
 	}
 
-	public List<CursoView> getCursos() {
+	public List<CursoView> getCursos() throws BaseDeDatosException {
+		List<Curso> cursos = CursoDAO.getInstancia().getAll();
 		List<CursoView> resultado = new ArrayList<CursoView>();
 		for (Curso c : cursos)
 			resultado.add(c.toView());
 		return resultado;
 	}
 
-	public List<MateriaView> getMaterias() {
+	public List<MateriaView> getMaterias() throws BaseDeDatosException {
+		List<Materia> materias = MateriaDAO.getInstancia().getAll();
 		List<MateriaView> resultado = new ArrayList<MateriaView>();
 		for (Materia m : materias)
 			resultado.add(m.toView());
 		return resultado;
 	}
 
-	public List<ProfesorView> getProfesores() {
+	public List<ProfesorView> getProfesores() throws BaseDeDatosException {
+		List<Profesor> profesores = ProfesorDAO.getInstancia().getAll();
 		List<ProfesorView> resultado = new ArrayList<ProfesorView>();
 		for (Profesor p : profesores) {
 			resultado.add(p.toView());
@@ -118,133 +113,129 @@ public class Controlador {
 		return AlumnoDAO.getInstancia().getByLegajo(legajo);
 	}
 
-	private boolean isAlumnoPorNombre(String nombre) {
-		for (Alumno a : alumnos)
-			if (a.soyELAlumno(nombre))
-				return true;
-		return false;
+	private boolean isAlumnoPorNombre(String nombre) throws BaseDeDatosException {
+		try {
+			AlumnoDAO.getInstancia().getByNombre(nombre);
+		} catch (AlumnoNoExisteException e) {
+			return false;
+		}
+		return true;
 	}
 
-	private Curso buscarCurso(int numero) throws Exception {
-		for (Curso c : cursos)
-			if (c.soyElCurso(numero))
-				return c;
-		throw new CursoException("El curso no existe");
+	private Curso buscarCurso(int numero) throws BaseDeDatosException, CursoNoExisteException {
+		return CursoDAO.getInstancia().getByNumero(numero);
 	}
 
-	private Materia buscarMateria(String codigo) throws Exception {
-		for (Materia m : materias)
-			if (m.soyLaMateria(codigo))
-				return m;
-		throw new MateriaException("La materia no existe");
+	private Materia buscarMateria(String codigo) throws BaseDeDatosException, MateriaNoExisteException {
+		return MateriaDAO.getInstancia().getByCodigo(codigo);
 	}
 
-	private Profesor buscarProfesor(int legajo) throws Exception {
-		for (Profesor p : profesores)
-			if (p.soyElProfesor(legajo))
-				return p;
-		throw new ProfesorException("El profesor no existe");
+	private Profesor buscarProfesor(int legajo) throws BaseDeDatosException, ProfesorNoExisteException {
+		return ProfesorDAO.getInstancia().getByLegajo(legajo);
 	}
 
-	private void cargoMaterias() {
+	private void cargoMaterias() throws BaseDeDatosException {
 		Materia m = new Materia("M001", "Materia I");
-		materias.add(m);
+		m.save();
 		m = new Materia("M002", "Materia II");
-		materias.add(m);
+		m.save();
 		m = new Materia("M003", "Materia III");
-		materias.add(m);
+		m.save();
 		m = new Materia("M004", "Materia IV");
-		materias.add(m);
+		m.save();
 		m = new Materia("M005", "Materia V");
-		materias.add(m);
+		m.save();
 		m = new Materia("M006", "Materia VI");
-		materias.add(m);
+		m.save();
 		m = new Materia("M007", "Materia VII");
-		materias.add(m);
+		m.save();
 		m = new Materia("M008", "Materia VII");
-		materias.add(m);
+		m.save();
 		m = new Materia("M009", "Materia IX");
-		materias.add(m);
+		m.save();
 		m = new Materia("M010", "Materia X");
-		materias.add(m);
+		m.save();
 	}
 
-	private void cargoAlumnos() {
+	private void cargoAlumnos() throws BaseDeDatosException {
 		Alumno a = new Alumno("Alumno I");
-		alumnos.add(a);
+		a.save();
 		a = new Alumno("Alumno II");
-		alumnos.add(a);
+		a.save();
 		a = new Alumno("Alumno III");
-		alumnos.add(a);
+		a.save();
 		a = new Alumno("Alumno IV");
-		alumnos.add(a);
+		a.save();
 		a = new Alumno("Alumno V");
-		alumnos.add(a);
+		a.save();
 		a = new Alumno("Alumno VI");
-		alumnos.add(a);
+		a.save();
 		a = new Alumno("Alumno VII");
-		alumnos.add(a);
+		a.save();
 		a = new Alumno("Alumno VIII");
-		alumnos.add(a);
+		a.save();
 		a = new Alumno("Alumno IX");
-		alumnos.add(a);
+		a.save();
 		a = new Alumno("Alumno X");
-		alumnos.add(a);
+		a.save();
 		a = new Alumno("Alumno XI");
-		alumnos.add(a);
+		a.save();
 		a = new Alumno("Alumno XII");
-		alumnos.add(a);
+		a.save();
 		a = new Alumno("Alumno XIII");
-		alumnos.add(a);
+		a.save();
 		a = new Alumno("Alumno XIV");
-		alumnos.add(a);
+		a.save();
 		a = new Alumno("Alumno XV");
-		alumnos.add(a);
+		a.save();
 	}
 
-	private void cargoProfesores() {
+	private void cargoProfesores() throws BaseDeDatosException {
 		Profesor p = new Profesor(1, "Profesor I", "Calle I", 101, "CP CI", "Localidad I");
-		profesores.add(p);
+		p.save();
 		p = new Profesor(2, "Profesor I", "Calle II", 102, "CP CII", "Localidad II");
-		profesores.add(p);
+		p.save();
 		p = new Profesor(3, "Profesor I", "Calle III", 103, "CP CIII", "Localidad III");
-		profesores.add(p);
+		p.save();
 		p = new Profesor(4, "Profesor I", "Calle IV", 104, "CP CIV", "Localidad IV");
-		profesores.add(p);
+		p.save();
 		p = new Profesor(5, "Profesor I", "Calle V", 105, "CP CV", "Localidad V");
-		profesores.add(p);
+		p.save();
 		p = new Profesor(6, "Profesor I", "Calle VI", 106, "CP CVI", "Localidad VI");
-		profesores.add(p);
+		p.save();
 		p = new Profesor(7, "Profesor I", "Calle VII", 107, "CP CVII", "Localidad VII");
-		profesores.add(p);
+		p.save();
 		p = new Profesor(8, "Profesor I", "Calle VIII", 108, "CP CVIII", "Localidad VIII");
-		profesores.add(p);
+		p.save();
 		p = new Profesor(9, "Profesor I", "Calle IX", 109, "CP CIX", "Localidad IX");
-		profesores.add(p);
+		p.save();
 		p = new Profesor(10, "Profesor X", "Calle X", 110, "CP CX", "Localidad X");
-		profesores.add(p);
+		p.save();
 	}
 
 	private void cargoCursos() throws Exception {
 		Profesor p = buscarProfesor(2);
 		Materia m = buscarMateria("M002");
-		Curso c = new Curso(p, m, "Lunes", "Ma�ana", 10);
-		cursos.add(c);
+		Curso c = new Curso(p, m, "Lunes", "Mañana", 10);
+		c.anotarAlumno(buscarAlumno(1));
+		c.anotarAlumno(buscarAlumno(2));
+		c.anotarAlumno(buscarAlumno(3));
+		c.save();
 		p = buscarProfesor(3);
 		m = buscarMateria("M004");
-		c = new Curso(p, m, "Martes", "Ma�ana", 12);
-		cursos.add(c);
+		c = new Curso(p, m, "Martes", "Mañana", 12);
+		c.save();
 		p = buscarProfesor(1);
 		m = buscarMateria("M001");
 		c = new Curso(p, m, "Martes", "Tarde", 15);
-		cursos.add(c);
+		c.save();
 		p = buscarProfesor(1);
 		m = buscarMateria("M001");
-		c = new Curso(p, m, "Jueves", "Ma�ana", 12);
-		cursos.add(c);
+		c = new Curso(p, m, "Jueves", "Mañana", 12);
+		c.save();
 		p = buscarProfesor(3);
 		m = buscarMateria("M010");
 		c = new Curso(p, m, "Viernes", "Noche", 12);
-		cursos.add(c);
+		c.save();
 	}
 }

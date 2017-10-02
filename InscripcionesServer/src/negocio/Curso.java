@@ -3,12 +3,13 @@ package negocio;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.CursoDAO;
 import dto.CursoView;
+import excepciones.BaseDeDatosException;
 import excepciones.CursoException;
 
 public class Curso {
 
-	private static int numerador;
 	private int numero;
 	private Profesor profesor;
 	private Materia materia;
@@ -18,14 +19,28 @@ public class Curso {
 	private int maximo;
 
 	public Curso(Profesor profesor, Materia materia, String dia, String turno, int maximo) {
-		Curso.numerador++;
-		this.numero = Curso.numerador;
+		this.numero = 0;
 		this.profesor = profesor;
 		this.materia = materia;
 		this.dia = dia;
 		this.turno = turno;
 		this.maximo = maximo;
-		alumnos = new ArrayList<Alumno>();
+		this.alumnos = new ArrayList<Alumno>();
+	}
+
+	public Curso(int numero, Profesor profesor, Materia materia, String dia, String turno, int maximo,
+			List<Alumno> alumnos) {
+		this.numero = numero;
+		this.profesor = profesor;
+		this.materia = materia;
+		this.dia = dia;
+		this.turno = turno;
+		this.maximo = maximo;
+		this.alumnos = alumnos;
+	}
+
+	public void save() throws BaseDeDatosException {
+		CursoDAO.getInstancia().save(this);
 	}
 
 	public void anotarAlumno(Alumno alumno) throws Exception {
