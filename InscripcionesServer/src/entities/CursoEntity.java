@@ -66,11 +66,11 @@ public class CursoEntity implements Serializable {
 	private Integer maximo;
 
 	@ManyToOne
-	@JoinColumn(name = "profesor")
+	@JoinColumn(name = "profesor_legajo")
 	private ProfesorEntity profesor;
 
 	@OneToOne
-	@JoinColumn(name = "materia")
+	@JoinColumn(name = "materia_codigo")
 	private MateriaEntity materia;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
