@@ -64,4 +64,46 @@ public class ProfesorEntity implements Serializable {
 	public void setDireccion(DireccionEntity direccion) {
 		this.direccion = direccion;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((direccion == null) ? 0 : direccion.hashCode());
+		result = prime * result + ((legajo == null) ? 0 : legajo.hashCode());
+		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProfesorEntity other = (ProfesorEntity) obj;
+		if (direccion == null) {
+			if (other.direccion != null)
+				return false;
+		} else if (!direccion.equals(other.direccion))
+			return false;
+		if (legajo == null) {
+			if (other.legajo != null)
+				return false;
+		} else if (!legajo.equals(other.legajo))
+			return false;
+		if (nombre == null) {
+			if (other.nombre != null)
+				return false;
+		} else if (!nombre.equals(other.nombre))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "ProfesorEntity [legajo=" + legajo + ", nombre=" + nombre + ", direccion=" + direccion + "]";
+	}
 }
